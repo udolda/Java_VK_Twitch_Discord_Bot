@@ -14,8 +14,8 @@ public class NewMessage extends Event {
 
     @Override
     public String exec(JSONHandler json) {
-        int peerId = json.getVkObject().getInt("peer_id");
-        String msg = json.getVkObject().getString("text");
+        int peerId = json.getVkObject().getJSONObject("message").getInt("peer_id");
+        String msg = json.getVkObject().getJSONObject("message").getString("text");
         ExecutorService exec = Executors.newCachedThreadPool();
         exec.execute(new Commander(msg,peerId));
         return System.getenv("responseStringDefault");
