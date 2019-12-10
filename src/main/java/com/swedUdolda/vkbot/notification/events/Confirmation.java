@@ -11,6 +11,6 @@ public class Confirmation extends Event {
 
     @Override
     public String exec(JSONHandler json) {
-        return System.getenv("responseString");
+        return System.getenv("responseStringVk");
     }
 }

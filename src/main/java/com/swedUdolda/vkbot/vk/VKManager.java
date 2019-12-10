@@ -36,4 +36,8 @@ public class VKManager {
         String attachmentId = Post.SendImagePostVK(vkCore.getVk(),vkCore.getActor(),url);
         vkCore.getVk().messages().send(vkCore.getActor()).peerId(peerId).attachment(attachmentId).message(msg).execute();
     }
+    public void sendImage(String msg, int id, int ownerId, int peerId) throws ClientException, ApiException {
+        String attachmentId = "photo" + ownerId + "_" + id;
+        vkCore.getVk().messages().send(vkCore.getActor()).peerId(peerId).attachment(attachmentId).message(msg).execute();
+    }
 }
