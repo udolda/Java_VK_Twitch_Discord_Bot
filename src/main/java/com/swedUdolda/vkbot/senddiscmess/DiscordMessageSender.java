@@ -46,7 +46,7 @@ public class DiscordMessageSender implements Runnable{
         try {
             jda.awaitReady();
             System.out.println(jda.getTextChannels());
-            System.out.println(jda.getTextChannelsByName("testingbot", true));
+            jda.getTextChannelsByName("testingbot", true).get(0).sendMessage("тестовое сообщение").queue();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
