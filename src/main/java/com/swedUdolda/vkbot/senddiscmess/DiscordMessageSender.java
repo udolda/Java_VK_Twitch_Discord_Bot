@@ -50,18 +50,19 @@ public class DiscordMessageSender implements Runnable{
 
         new VKManager().sendMessage("Пришла новая запись\n" + text,98604072);
         JSONArray jsonArray = vkObject.getJSONArray("attachments");
-
-        for(Object obj: jsonArray){
-            JSONObject jsonObject = (JSONObject)obj;
-            int id = jsonObject.getJSONObject("photo").getInt("id");
-            int ownerId = jsonObject.getJSONObject("photo").getInt("owner_id");
-            try {
-                new VKManager().sendImage("",id,ownerId,98604072);
-            } catch (ClientException | ApiException e) {
-                e.printStackTrace();
-                new VKManager().sendMessage("Не удалось отправить картинку",98604072);
+        System.out.println(jsonArray);
+        if (jsonArray != null)
+            for(Object obj: jsonArray){
+                JSONObject jsonObject = (JSONObject)obj;
+                int id = jsonObject.getJSONObject("photo").getInt("id");
+                int ownerId = jsonObject.getJSONObject("photo").getInt("owner_id");
+                try {
+                    new VKManager().sendImage("",id,ownerId,98604072);
+                } catch (ClientException | ApiException e) {
+                    e.printStackTrace();
+                    new VKManager().sendMessage("Не удалось отправить картинку",98604072);
+                }
             }
-        }
 
         try {
             exec();
