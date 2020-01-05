@@ -27,7 +27,9 @@ public class DiscordMessageSender{
         //бот дискорд
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         String token = System.getenv("discordBotToken");
+        System.out.println(token);
         builder.setToken(token);
+        System.out.println("Перехожу к отправке сообщения в текстовый канал");
         builder.build().getTextChannels().get(0).sendMessage("что-то").queue();
         //бот дискорд
     }
