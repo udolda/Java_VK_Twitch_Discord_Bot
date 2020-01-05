@@ -2,12 +2,14 @@ package com.swedUdolda.vkbot.notification.events;
 
 import com.swedUdolda.vkbot.json.JSONHandler;
 import com.swedUdolda.vkbot.notification.Event;
+import com.swedUdolda.vkbot.senddiscmess.DiscordMessageSender;
 import com.swedUdolda.vkbot.vk.VKManager;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +22,10 @@ public class WallPostNew extends Event {
     public String exec(JSONHandler json) {
         JSONObject vkObject = json.getVkObject();
         String text = vkObject.getString("text");
+
         new VKManager().sendMessage("Пришла новая запись\n" + text,98604072);
         JSONArray jsonArray = vkObject.getJSONArray("attachments");
+
         for(Object obj: jsonArray){
             JSONObject jsonObject = (JSONObject)obj;
             int id = jsonObject.getJSONObject("photo").getInt("id");
@@ -32,6 +36,12 @@ public class WallPostNew extends Event {
                 e.printStackTrace();
                 new VKManager().sendMessage("Не удалось отправить картинку",98604072);
             }
+        }
+
+        try {
+            DiscordMessageSender.exec();
+        } catch (LoginException | ClientException | ApiException e) {
+            e.printStackTrace();
         }
 
         return System.getenv("responseStringDefault");

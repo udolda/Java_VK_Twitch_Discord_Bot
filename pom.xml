@@ -19,6 +19,15 @@
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>jcenter</id>
+      <name>jcenter-bintray</name>
+      <url>https://jcenter.bintray.com</url>
+    </repository>
+
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -56,6 +65,13 @@
       <version>0.5.12</version>
     </dependency>
 
+    <!-- Discord API-->
+    <dependency>
+      <groupId>net.dv8tion</groupId>
+      <artifactId>JDA</artifactId>
+      <version>4.1.0_95</version>
+    </dependency>
+
     <!--Решает проблему с логами-->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -70,12 +86,12 @@
       <artifactId>jsoup</artifactId>
       <version>1.7.2</version>
     </dependency>
-      <dependency>
-          <groupId>org.jetbrains</groupId>
-          <artifactId>annotations-java5</artifactId>
-          <version>RELEASE</version>
-          <scope>compile</scope>
-      </dependency>
+    <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations-java5</artifactId>
+      <version>RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
 
     <!--PDF Parsing-->
     <dependency>

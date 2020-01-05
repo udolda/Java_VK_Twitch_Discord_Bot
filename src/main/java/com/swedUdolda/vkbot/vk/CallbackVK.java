@@ -41,6 +41,7 @@ public class CallbackVK extends javax.servlet.http.HttpServlet {
             System.out.println("Полученная информация не является json форматом, или не найден параметр get_type");
             return;
         }
+
         String responseMessage;
         if(event != null)
            responseMessage  = event.exec(jsonHandler);
