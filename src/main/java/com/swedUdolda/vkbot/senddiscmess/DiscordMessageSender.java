@@ -22,18 +22,7 @@ public class DiscordMessageSender implements Runnable{
         this.vkObject = vkObject;
     }
 
-    public static void exec() throws LoginException, ClientException, ApiException {
-        /*
-        TransportClient transportClient = HttpTransportClient.getInstance();
-        VkApiClient vk = new VkApiClient(transportClient);
-
-        GroupAuthResponse authResponse = vk.oAuth()
-                .groupAuthorizationCodeFlow(APP_ID, CLIENT_SECRET, REDIRECT_URI, code)
-                .execute();
-
-        GroupActor actor = new GroupActor(groupId, authResponse.getAccessTokens().get(groupId));
-        //старый вк код
-        */
+    public static void exec(String message) throws LoginException, InterruptedException {
 
         //бот дискорд
         JDABuilder builder = new JDABuilder(AccountType.BOT);
@@ -41,15 +30,10 @@ public class DiscordMessageSender implements Runnable{
         System.out.println(token);
         builder.setToken(token);
         System.out.println("Перехожу к отправке сообщения в текстовый канал");
-//        builder.build().getTextChannels().get(0).sendMessage("что-то").queue();
         JDA jda = builder.build();
-        try {
-            jda.awaitReady();
-            System.out.println(jda.getTextChannels());
-            jda.getTextChannelsByName("testingbot", true).get(0).sendMessage("тестовое сообщение").queue();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        jda.awaitReady();
+        System.out.println(jda.getTextChannels());
+        jda.getTextChannelsByName("testingbot", true).get(0).sendMessage(message).queue();
         //бот дискорд
     }
 
@@ -77,9 +61,10 @@ public class DiscordMessageSender implements Runnable{
         }
 
         try {
-            exec();
-        } catch (LoginException | ClientException | ApiException e) {
+            exec(text);
+        } catch (LoginException | InterruptedException e) {
+            System.out.println("Ощибка отправки сообщения в дискорд");
             e.printStackTrace();
-        }
+    }
     }
 }
