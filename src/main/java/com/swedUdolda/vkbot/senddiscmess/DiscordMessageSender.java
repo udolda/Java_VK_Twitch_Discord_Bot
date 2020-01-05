@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.security.auth.login.LoginException;
@@ -49,20 +50,23 @@ public class DiscordMessageSender implements Runnable{
         String text = vkObject.getString("text");
 
         new VKManager().sendMessage("Пришла новая запись\n" + text,98604072);
-        JSONArray jsonArray = vkObject.getJSONArray("attachments");
-        System.out.println(jsonArray);
-        if (jsonArray != null)
-            for(Object obj: jsonArray){
-                JSONObject jsonObject = (JSONObject)obj;
+        try {
+            JSONArray jsonArray = vkObject.getJSONArray("attachments");
+            for (Object obj : jsonArray) {
+                JSONObject jsonObject = (JSONObject) obj;
                 int id = jsonObject.getJSONObject("photo").getInt("id");
                 int ownerId = jsonObject.getJSONObject("photo").getInt("owner_id");
                 try {
-                    new VKManager().sendImage("",id,ownerId,98604072);
+                    new VKManager().sendImage("", id, ownerId, 98604072);
                 } catch (ClientException | ApiException e) {
                     e.printStackTrace();
-                    new VKManager().sendMessage("Не удалось отправить картинку",98604072);
+                    new VKManager().sendMessage("Не удалось отправить картинку", 98604072);
                 }
             }
+        }
+        catch(JSONException e){
+            System.out.println("Нет картинок");
+        }
 
         try {
             exec();
