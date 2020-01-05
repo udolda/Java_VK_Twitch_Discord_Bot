@@ -44,6 +44,10 @@ public class DiscordMessageSender implements Runnable{
 //        builder.build().getTextChannels().get(0).sendMessage("что-то").queue();
         JDA api = builder.build();
         System.out.println(api.getTextChannels());
+        System.out.println(api.getPrivateChannels());
+        System.out.println(api.getUsers());
+        System.out.println(api.getStoreChannels());
+        System.out.println(api.getVoiceChannels());
         //бот дискорд
     }
 
