@@ -41,7 +41,9 @@ public class DiscordMessageSender implements Runnable{
         System.out.println(token);
         builder.setToken(token);
         System.out.println("Перехожу к отправке сообщения в текстовый канал");
-        builder.build().getTextChannels().get(0).sendMessage("что-то").queue();
+//        builder.build().getTextChannels().get(0).sendMessage("что-то").queue();
+        JDA api = builder.build();
+        System.out.println(api.getTextChannels());
         //бот дискорд
     }
 
