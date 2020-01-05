@@ -1,5 +1,6 @@
 package com.swedUdolda.vkbot.senddiscmess;
 
+import com.swedUdolda.vkbot.vk.VKManager;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import net.dv8tion.jda.api.AccountType;
@@ -7,10 +8,19 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.security.auth.login.LoginException;
 
-public class DiscordMessageSender{
+public class DiscordMessageSender implements Runnable{
+
+    JSONObject vkObject;
+
+    public DiscordMessageSender(JSONObject vkObject) {
+        this.vkObject = vkObject;
+    }
+
     public static void exec() throws LoginException, ClientException, ApiException {
         /*
         TransportClient transportClient = HttpTransportClient.getInstance();
@@ -32,5 +42,31 @@ public class DiscordMessageSender{
         System.out.println("Перехожу к отправке сообщения в текстовый канал");
         builder.build().getTextChannels().get(0).sendMessage("что-то").queue();
         //бот дискорд
+    }
+
+    @Override
+    public void run() {
+        String text = vkObject.getString("text");
+
+        new VKManager().sendMessage("Пришла новая запись\n" + text,98604072);
+        JSONArray jsonArray = vkObject.getJSONArray("attachments");
+
+        for(Object obj: jsonArray){
+            JSONObject jsonObject = (JSONObject)obj;
+            int id = jsonObject.getJSONObject("photo").getInt("id");
+            int ownerId = jsonObject.getJSONObject("photo").getInt("owner_id");
+            try {
+                new VKManager().sendImage("",id,ownerId,98604072);
+            } catch (ClientException | ApiException e) {
+                e.printStackTrace();
+                new VKManager().sendMessage("Не удалось отправить картинку",98604072);
+            }
+        }
+
+        try {
+            exec();
+        } catch (LoginException | ClientException | ApiException e) {
+            e.printStackTrace();
+        }
     }
 }
