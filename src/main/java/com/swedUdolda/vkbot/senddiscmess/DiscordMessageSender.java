@@ -26,7 +26,7 @@ public class DiscordMessageSender{
 
         //бот дискорд
         JDABuilder builder = new JDABuilder(AccountType.BOT);
-        String token = "NjE5ODgxMjQyNDQ3NTc3MTA4.Xa8j0g.QAgiFCceNE8Nz2ILaWzaWY1TClQ";
+        String token = System.getenv("discordBotToken");
         builder.setToken(token);
         builder.build().getTextChannels().get(0).sendMessage("что-то").queue();
         //бот дискорд
