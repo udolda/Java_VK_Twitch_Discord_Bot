@@ -7,7 +7,7 @@
     <servlet>
         <servlet-name>VKServlet</servlet-name>
         <servlet-class>com.swedUdolda.vkbot.vk.CallbackVK</servlet-class>
-        </servlet>
+    </servlet>
     <servlet-mapping>
         <servlet-name>VKServlet</servlet-name>
         <url-pattern>/vk-request</url-pattern>

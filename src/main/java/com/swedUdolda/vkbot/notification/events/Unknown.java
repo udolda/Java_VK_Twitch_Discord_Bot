@@ -2,7 +2,6 @@ package com.swedUdolda.vkbot.notification.events;
 
 import com.swedUdolda.vkbot.json.JSONHandler;
 import com.swedUdolda.vkbot.notification.Event;
-import org.json.JSONObject;
 
 public class Unknown extends Event {
     public Unknown(String name) {
