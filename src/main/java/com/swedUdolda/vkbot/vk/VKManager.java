@@ -49,6 +49,7 @@ public class VKManager {
         for(int i = 0; i < id.length; i++){
             attachmentIdList.add("photo" + ownerId[i] + "_" + id[i]);
         }
+        System.out.println(attachmentIdList);
         vkCore.getVk().messages().send(vkCore.getActor()).peerId(peerId).attachment(attachmentIdList).message(msg).execute();
     }
 }

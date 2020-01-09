@@ -56,6 +56,7 @@ public class DiscordMessageSender implements Runnable{
                 System.out.println(jsonObjectPhoto);
                 idArray[i] = jsonObjectPhoto.getInt("id");
                 ownerIdArray[i] = jsonObjectPhoto.getInt("owner_id");
+                System.out.println(idArray[i]+"_"+ownerIdArray[i]);
                 i++;
                 JSONArray jsonArraySizes = jsonObjectPhoto.getJSONArray("sizes");
                 JSONObject jsonObjectSizesLast =  (JSONObject) jsonArraySizes.get(jsonArraySizes.length() - 1);
@@ -74,7 +75,9 @@ public class DiscordMessageSender implements Runnable{
             e.printStackTrace();
         }
 
-        System.out.println(urlImages);
+        for(String urlImage : urlImages){
+            text += "\n" + urlImage;
+        }
 
         try {
             exec(text);
