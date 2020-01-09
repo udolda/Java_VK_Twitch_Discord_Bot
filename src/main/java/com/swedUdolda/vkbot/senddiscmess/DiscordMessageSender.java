@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DiscordMessageSender implements Runnable{
 
@@ -24,16 +26,16 @@ public class DiscordMessageSender implements Runnable{
 
     public static void exec(String message) throws LoginException, InterruptedException {
 
-        //бот дискорд
+        //логинимся за бота на сервере
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         String token = System.getenv("discordBotToken");
         System.out.println(token);
         builder.setToken(token);
+
         System.out.println("Перехожу к отправке сообщения в текстовый канал");
         JDA jda = builder.build();
         jda.awaitReady();
         jda.getTextChannelsByName("testingbot", true).get(0).sendMessage(message).queue();
-        //бот дискорд
     }
 
     @Override
@@ -41,23 +43,38 @@ public class DiscordMessageSender implements Runnable{
         String text = vkObject.getString("text");
 
         new VKManager().sendMessage("Пришла новая запись\n" + text,98604072);
+        List<String> urlImages = new ArrayList<>();
         try {
             JSONArray jsonArray = vkObject.getJSONArray("attachments");
+            System.out.println(jsonArray.length());
+            int [] idArray = new int [jsonArray.length()];
+            int [] ownerIdArray = new int [jsonArray.length()];
+            int i = 0;
             for (Object obj : jsonArray) {
                 JSONObject jsonObject = (JSONObject) obj;
-                int id = jsonObject.getJSONObject("photo").getInt("id");
-                int ownerId = jsonObject.getJSONObject("photo").getInt("owner_id");
-                try {
-                    new VKManager().sendImage("", id, ownerId, 98604072);
-                } catch (ClientException | ApiException e) {
-                    e.printStackTrace();
-                    new VKManager().sendMessage("Не удалось отправить картинку", 98604072);
-                }
+                JSONObject jsonObjectPhoto = jsonObject.getJSONObject("photo");
+                System.out.println(jsonObjectPhoto);
+                idArray[i] = jsonObjectPhoto.getInt("id");
+                ownerIdArray[i] = jsonObjectPhoto.getInt("owner_id");
+                i++;
+                JSONArray jsonArraySizes = jsonObjectPhoto.getJSONArray("sizes");
+                JSONObject jsonObjectSizesLast =  (JSONObject) jsonArraySizes.get(jsonArraySizes.length() - 1);
+                urlImages.add(jsonObjectSizesLast.getString("url"));
             }
+            if(jsonArray.length() > 0){
+                new VKManager().sendImageList("", idArray, ownerIdArray,98604072);
+            }
+            else
+                throw new JSONException("Нет картинок");
         }
         catch(JSONException e){
-            System.out.println("Нет картинок");
+            e.printStackTrace();
+        } catch (ClientException | ApiException e) {
+            System.out.println("Не удалось отправить картинки");
+            e.printStackTrace();
         }
+
+        System.out.println(urlImages);
 
         try {
             exec(text);
