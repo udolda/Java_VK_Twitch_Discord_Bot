@@ -8,11 +8,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Index</title>
+    <title>Discord Chat-Bot the NuarBot</title>
 </head>
 <body>
-    <h1>Testing page</h1>
-    <a href="/send-post?key=confirmation">Отправить POST запрос Confirmation</a></br>
-    <a href="/test">Test</a>
+    <h1>Hello you are on NuarBot web page!</h1>
 </body>
 </html>

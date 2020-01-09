@@ -1,7 +1,6 @@
 package com.swedUdolda.vkbot.notification;
 
 import com.swedUdolda.vkbot.json.JSONHandler;
-import org.json.JSONObject;
 
 public abstract class Event {
     private final String name;
