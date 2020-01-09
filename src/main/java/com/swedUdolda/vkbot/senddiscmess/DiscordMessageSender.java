@@ -4,8 +4,11 @@ import com.swedUdolda.vkbot.vk.VKManager;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.EmbedType;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONArray;
@@ -13,6 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +29,7 @@ public class DiscordMessageSender implements Runnable{
         this.vkObject = vkObject;
     }
 
-    public static void exec(String message) throws LoginException, InterruptedException {
+    public static void exec(String message, List<String> urlImages) throws LoginException, InterruptedException {
 
         //логинимся за бота на сервере
         JDABuilder builder = new JDABuilder(AccountType.BOT);
@@ -32,7 +37,16 @@ public class DiscordMessageSender implements Runnable{
         builder.setToken(token);
         JDA jda = builder.build();
         jda.awaitReady();
-        jda.getTextChannelsByName("testingbot", true).get(0).sendMessage(message).queue();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("test_title", "test_url");
+        embedBuilder.setDescription("test_description");
+        embedBuilder.addField("article1\narticle1.1", "text1", false);
+        embedBuilder.addField("article2", "text2", true);
+        embedBuilder.setColor(Color.BLUE);
+        for(String urlImage : urlImages){
+            embedBuilder.setImage(urlImage);
+        }
+        jda.getTextChannelsByName("testingbot", true).get(0).sendMessage(embedBuilder.build()).queue();
     }
 
     @Override
@@ -42,42 +56,39 @@ public class DiscordMessageSender implements Runnable{
         try {
             JSONArray jsonArray = vkObject.getJSONArray("attachments");
             System.out.println(jsonArray.length());
-            int [] idArray = new int [jsonArray.length()];
-            int [] ownerIdArray = new int [jsonArray.length()];
-            int i = 0;
+            //int [] idArray = new int [jsonArray.length()];
+            //int [] ownerIdArray = new int [jsonArray.length()];
+            //int i = 0;
             for (Object obj : jsonArray) {
                 JSONObject jsonObject = (JSONObject) obj;
                 JSONObject jsonObjectPhoto = jsonObject.getJSONObject("photo");
-                idArray[i] = jsonObjectPhoto.getInt("id");
-                ownerIdArray[i] = jsonObjectPhoto.getInt("owner_id");
-                i++;
+                //idArray[i] = jsonObjectPhoto.getInt("id");
+                //ownerIdArray[i] = jsonObjectPhoto.getInt("owner_id");
+                //i++;
                 JSONArray jsonArraySizes = jsonObjectPhoto.getJSONArray("sizes");
                 JSONObject jsonObjectSizesLast =  (JSONObject) jsonArraySizes.get(jsonArraySizes.length() - 1);
                 urlImages.add(jsonObjectSizesLast.getString("url"));
             }
-            if(jsonArray.length() > 0){
-                new VKManager().sendImageList(text, idArray, ownerIdArray,98604072);
-                for(int k = 0; k < idArray.length;k++){
-                    System.out.println(ownerIdArray[k] + "_" + idArray[k]);
-                    new VKManager().sendImage("",idArray[k],ownerIdArray[k],98604072);
-                }
-            }
-            else
-                throw new JSONException("Нет картинок");
+//            if(jsonArray.length() > 0){
+//                new VKManager().sendImageList(text, idArray, ownerIdArray,98604072);
+//                for(int k = 0; k < idArray.length;k++){
+//                    System.out.println(ownerIdArray[k] + "_" + idArray[k]);
+//                    new VKManager().sendImage("",idArray[k],ownerIdArray[k],98604072);
+//                }
+//            }
+//            else
+//                throw new JSONException("Нет картинок");
         }
         catch(JSONException e){
             e.printStackTrace();
-        } catch (ClientException | ApiException e) {
-            System.out.println("Не удалось отправить картинки");
-            e.printStackTrace();
-        }
-
-        for(String urlImage : urlImages){
-            text += "\n" + urlImage;
-        }
+       }
+//        catch (ClientException | ApiException e) {
+//            System.out.println("Не удалось отправить картинки");
+//            e.printStackTrace();
+//        }
 
         try {
-            exec(text);
+            exec(text, urlImages);
         } catch (LoginException | InterruptedException e) {
             System.out.println("Ощибка отправки сообщения в дискорд");
             e.printStackTrace();
