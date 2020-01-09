@@ -38,7 +38,7 @@ public class DiscordMessageSender implements Runnable{
         JDA jda = builder.build();
         jda.awaitReady();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("test_title", "test_url");
+        embedBuilder.setTitle("test_title", "https://vk.com/publictestchatbot");
         embedBuilder.setDescription("test_description");
         embedBuilder.addField("article1\narticle1.1", "text1", false);
         embedBuilder.addField("article2", "text2", true);
