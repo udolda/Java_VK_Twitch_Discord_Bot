@@ -29,7 +29,7 @@ public class DiscordMessageSender implements Runnable{
         this.vkObject = vkObject;
     }
 
-    public static void exec(String message, List<String> urlImages) throws LoginException, InterruptedException {
+    public static void exec(String message, List<String> urlImages, int idFrom, int id) throws LoginException, InterruptedException {
 
         //логинимся за бота на сервере
         JDABuilder builder = new JDABuilder(AccountType.BOT);
@@ -38,20 +38,27 @@ public class DiscordMessageSender implements Runnable{
         JDA jda = builder.build();
         jda.awaitReady();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("test_title", "https://vk.com/publictestchatbot");
-        embedBuilder.setDescription("test_description");
-        embedBuilder.addField("article1\narticle1.1", "text1", false);
-        embedBuilder.addField("article2", "text2", true);
+        embedBuilder.setTitle("Новая запись на стене", "https://vk.com/publictestchatbot?w=wall-"+idFrom+"_"+id);
+        embedBuilder.setDescription(message);
         embedBuilder.setColor(Color.BLUE);
-        for(String urlImage : urlImages){
-            embedBuilder.setImage(urlImage);
-        }
+        if(!urlImages.isEmpty()) embedBuilder.setImage(urlImages.get(0));
         jda.getTextChannelsByName("testingbot", true).get(0).sendMessage(embedBuilder.build()).queue();
+        if(urlImages.size() > 1){
+            for(int i = 1; i < urlImages.size(); i++){
+                EmbedBuilder embedBuilderImage = new EmbedBuilder();
+                embedBuilderImage.setColor(Color.BLUE);
+                embedBuilderImage.setImage(urlImages.get(i));
+                jda.getTextChannelsByName("testingbot", true).get(0).sendMessage(embedBuilderImage.build()).queue();
+            }
+        }
     }
 
     @Override
     public void run() {
         String text = vkObject.getString("text");
+        int id, idFrom;
+        id = vkObject.getInt("id");
+        idFrom = vkObject.getInt("from_id");
         List<String> urlImages = new ArrayList<>();
         try {
             JSONArray jsonArray = vkObject.getJSONArray("attachments");
@@ -88,7 +95,7 @@ public class DiscordMessageSender implements Runnable{
 //        }
 
         try {
-            exec(text, urlImages);
+            exec(text, urlImages, idFrom, id);
         } catch (LoginException | InterruptedException e) {
             System.out.println("Ощибка отправки сообщения в дискорд");
             e.printStackTrace();
