@@ -41,8 +41,6 @@ public class DiscordMessageSender implements Runnable{
     @Override
     public void run() {
         String text = vkObject.getString("text");
-
-        new VKManager().sendMessage("Пришла новая запись\n" + text,98604072);
         List<String> urlImages = new ArrayList<>();
         try {
             JSONArray jsonArray = vkObject.getJSONArray("attachments");
@@ -63,7 +61,7 @@ public class DiscordMessageSender implements Runnable{
                 urlImages.add(jsonObjectSizesLast.getString("url"));
             }
             if(jsonArray.length() > 0){
-                new VKManager().sendImageList("", idArray, ownerIdArray,98604072);
+                new VKManager().sendImageList(text, idArray, ownerIdArray,98604072);
             }
             else
                 throw new JSONException("Нет картинок");

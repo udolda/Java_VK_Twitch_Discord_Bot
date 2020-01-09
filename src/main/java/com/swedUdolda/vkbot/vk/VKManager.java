@@ -40,14 +40,14 @@ public class VKManager {
     }
 
     public void sendImage(String msg, int id, int ownerId, int peerId) throws ClientException, ApiException {
-        String attachmentId = "photo" + ownerId + "_" + id;
+        String attachmentId = "photo-" + ownerId + "_" + id;
         vkCore.getVk().messages().send(vkCore.getActor()).peerId(peerId).attachment(attachmentId).message(msg).execute();
     }
 
     public void sendImageList(String msg, int [] id, int [] ownerId, int peerId) throws ClientException, ApiException{
         List<String> attachmentIdList = new ArrayList<>();
         for(int i = 0; i < id.length; i++){
-            attachmentIdList.add("photo" + ownerId[i] + "_" + id[i]);
+            attachmentIdList.add("photo-" + ownerId[i] + "_" + id[i]);
         }
         System.out.println(attachmentIdList);
         vkCore.getVk().messages().send(vkCore.getActor()).peerId(peerId).attachment(attachmentIdList).message(msg).execute();
