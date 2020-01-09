@@ -29,10 +29,7 @@ public class DiscordMessageSender implements Runnable{
         //логинимся за бота на сервере
         JDABuilder builder = new JDABuilder(AccountType.BOT);
         String token = System.getenv("discordBotToken");
-        System.out.println(token);
         builder.setToken(token);
-
-        System.out.println("Перехожу к отправке сообщения в текстовый канал");
         JDA jda = builder.build();
         jda.awaitReady();
         jda.getTextChannelsByName("testingbot", true).get(0).sendMessage(message).queue();
@@ -51,10 +48,8 @@ public class DiscordMessageSender implements Runnable{
             for (Object obj : jsonArray) {
                 JSONObject jsonObject = (JSONObject) obj;
                 JSONObject jsonObjectPhoto = jsonObject.getJSONObject("photo");
-                System.out.println(jsonObjectPhoto);
                 idArray[i] = jsonObjectPhoto.getInt("id");
                 ownerIdArray[i] = jsonObjectPhoto.getInt("owner_id");
-                System.out.println(idArray[i]+"_"+ownerIdArray[i]);
                 i++;
                 JSONArray jsonArraySizes = jsonObjectPhoto.getJSONArray("sizes");
                 JSONObject jsonObjectSizesLast =  (JSONObject) jsonArraySizes.get(jsonArraySizes.length() - 1);
@@ -62,6 +57,10 @@ public class DiscordMessageSender implements Runnable{
             }
             if(jsonArray.length() > 0){
                 new VKManager().sendImageList(text, idArray, ownerIdArray,98604072);
+                for(int k = 0; k < idArray.length;k++){
+                    System.out.println(ownerIdArray[k] + "_" + idArray[k]);
+                    new VKManager().sendImage("",idArray[k],ownerIdArray[k],98604072);
+                }
             }
             else
                 throw new JSONException("Нет картинок");
