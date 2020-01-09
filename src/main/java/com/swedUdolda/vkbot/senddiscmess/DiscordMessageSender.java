@@ -33,7 +33,9 @@ public class DiscordMessageSender implements Runnable{
         embedBuilder.setTitle("Новая запись на стене", System.getenv("communityURL")+"?w=wall"+idFrom+"_"+id);
         embedBuilder.setDescription(message);
         embedBuilder.setColor(Color.BLUE);
-        if(!urlImages.isEmpty()) embedBuilder.setImage(urlImages.get(0));
+        if(!urlImages.isEmpty()) {
+            embedBuilder.setImage(urlImages.get(0));
+        }
         jda.getTextChannelsByName(System.getenv("channelForBotName"), true).get(0).sendMessage(embedBuilder.build()).queue();
         if(urlImages.size() > 1){
             for(int i = 1; i < urlImages.size(); i++){
@@ -42,6 +44,10 @@ public class DiscordMessageSender implements Runnable{
                 embedBuilderImage.setImage(urlImages.get(i));
                 jda.getTextChannelsByName(System.getenv("channelForBotName"), true).get(0).sendMessage(embedBuilderImage.build()).queue();
             }
+        }
+        System.out.println("Текстовое сообщение отправлено. Text: " + message);
+        for (String imgURL:urlImages) {
+            System.out.println("Изображение отправлено. URL: " + imgURL);
         }
     }
 
@@ -54,7 +60,7 @@ public class DiscordMessageSender implements Runnable{
         List<String> urlImages = new ArrayList<>();
         try {
             JSONArray jsonArray = vkObject.getJSONArray("attachments");
-            System.out.println(jsonArray.length());
+            System.out.println("Изображений получено: "+jsonArray.length());
             for (Object obj : jsonArray) {
                 JSONObject jsonObject = (JSONObject) obj;
                 JSONObject jsonObjectPhoto = jsonObject.getJSONObject("photo");
