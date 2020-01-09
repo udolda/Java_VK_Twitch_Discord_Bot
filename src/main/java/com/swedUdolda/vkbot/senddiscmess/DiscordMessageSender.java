@@ -38,7 +38,7 @@ public class DiscordMessageSender implements Runnable{
         JDA jda = builder.build();
         jda.awaitReady();
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Новая запись на стене", "https://vk.com/publictestchatbot?w=wall-"+idFrom+"_"+id);
+        embedBuilder.setTitle("Новая запись на стене", "https://vk.com/publictestchatbot?w=wall"+idFrom+"_"+id);
         embedBuilder.setDescription(message);
         embedBuilder.setColor(Color.BLUE);
         if(!urlImages.isEmpty()) embedBuilder.setImage(urlImages.get(0));
